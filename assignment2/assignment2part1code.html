@@ -35,13 +35,13 @@
                 Code is displayed using the fetch function (Javascript) on the python script posted on the git repo: https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch 
             </p>
 
-            <pre> </pre>
+            <pre id="python-code-polynomial-basis"></pre> 
 
             <script>
             fetch("A2P1PolynomialBasis.py")
                 .then(response => response.text())
                 .then(code => {
-                    document.getElementById("python-code-NR").textContent = code;
+                    document.getElementById("python-code-polynomial-basis").textContent = code;
                 });
             </script>
         </section>

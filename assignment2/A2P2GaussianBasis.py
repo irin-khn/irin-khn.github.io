@@ -1,6 +1,6 @@
 ## # ---------------------------------------------------
 # Irina Khan
-# SYDE 572 Assignment 2 Part 1
+# SYDE 572 Assignment 2 Part 2
 #
 # Objective: 
 # Predict the median house value from a large dataset

@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Assignment 2 - Linear Regression</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+
+    <link rel="stylesheet" href="../assets/css/assignment.css">
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header id="header">
+        <div class="inner">
+            <h1>Assignment 2 Part 2: Code</h1>
+            <nav>
+                <a href="../index.html">Home</a>
+                <a href="../assignment2/assignment2part1report.html">Part 1 Report</a>
+                <a href="../assignment2/assignment2part1code.html">Part 1 Python Code</a>
+                <a href="../assignment2/assignment2part2report.html">Part 2 Report</a>
+                <a href="../assignment2/assignment2part2code.html">Part 2 Python Code</a>
+            </nav>
+        </div>
+        </header>
+
+    <div id="main">
+        <section id="overview">
+            <h5>By Irina Khan, October 20, 2026</h5>
+            <header class="major">
+                <h2>Gaussian Basis Function Python Code</h2>
+            </header>
+
+            <p>
+                Code is displayed using the fetch function (Javascript) on the python script posted on the git repo: https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch 
+            </p>
+
+            <pre> </pre>
+
+            <script>
+            fetch("A2P2GaussianBasis.py")
+                .then(response => response.text())
+                .then(code => {
+                    document.getElementById("python-code-NR").textContent = code;
+                });
+            </script>
+        </section>
+    </div>
+</body>
+
+        

@@ -410,8 +410,4 @@ plt.ylabel('RMS of Eighth Degree Polynomial Basis')
 plt.title('Plot of Cross-validated RMS values for Eighth Degree Polynomial \nBasis vs. Hyperparameter Lambda Values')
 plt.grid(True, which="both", linestyle=':', alpha=0.6)
 plt.legend()
-
-lambda_0 = np.linspace(0.01, 1000, 1000)
-y_lambda_0 = rms_of_lambdas[0] * lambda_0
-
 plt.show()

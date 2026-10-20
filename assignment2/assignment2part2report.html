@@ -1,0 +1,277 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Assignment 2 - Linear Regression</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+
+    <link rel="stylesheet" href="../assets/css/assignment.css">
+       
+    <!--The following code block enables Latex programming, which was taken 
+    from the 'Starter Template' at https://katex.org/docs/browser-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.18.7/dist/katex.min.css" integrity="sha384-JctiRyLzXCrSoOOzFlSoWLdyzQl7OrrRnhyeBmzB6ZWtcjccUyc8lCQJqIbs3uQX" crossorigin="anonymous">
+
+    <!-- The loading of KaTeX is deferred to speed up page rendering -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.18.7/dist/katex.min.js" integrity="sha384-+7Keh381hSkXmXqnjC0JBM/kzsN6TFj+wMKychSLjTvJ8/0ElMde2uKl8i6p6Buj" crossorigin="anonymous"></script>
+
+    <!-- To automatically render math in text elements, include the auto-render extension: -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.18.7/dist/contrib/auto-render.min.js" integrity="sha384-bjyGPfbij8/NDKJhSGZNP/khQVgtHUE5exjm4Ydllo42FwIgYsdLO2lXGmRBf5Mz" crossorigin="anonymous"
+        onload="renderMathInElement(document.body);"></script>
+</head>
+<body>
+
+    <!-- Header -->
+    <header id="header">
+        <div class="inner">
+            <h1>Assignment 2: Linear Regression</h1>
+            <nav>
+                <a href="../index.html">Home</a>
+                <a href="../assignment2/assignment2part1report.html">Part 1 Report</a>
+                <a href="../assignment2/assignment2part1code.html">Part 1 Python Code</a>
+                <a href="../assignment2/assignment2part2report.html">Part 2 Report</a>
+                <a href="../assignment2/assignment2part2code.html">Part 2 Python Code</a>
+            </nav>
+        </div>
+        </header>
+
+    <!-- Main Content -->
+    <div id="main">
+
+        <!-- Overview -->
+        <section id="overview">
+            <h5>By Irina Khan, October 20, 2026</h5>
+            <header class="major">
+                <h2>Overview</h2>
+            </header>
+
+            <p>
+                This assignment is aimed to implement a linear basis function regression 
+                with both polynomial and Gaussian basis.
+                Part 2 focuses on the implementation of a linear regression with gaussian basis functions, 
+                using a number of basis functions with different centers, ranging from using 5 functions to 95 functions.
+                The Housing dataset has 506 sets of data points, where each point is made up of 13 different features 
+                and contains 1 column of the resulting y-values (aka y_hat) that we want to be able to predict.
+            </p>
+            <h2> Table of Contents</h2>
+            <ul>
+                <li> <a href="#part-e"> Part e) Plots of Training Error and Test Error Versus 'k' Gaussian Basis Functions</a></li>
+                <li> <a href="#part-f"> Part f) Ridge Regression and Cross Validation of 90 Gaussian Basis Functions</a></li>
+            </ul>
+        </section>
+
+       
+        <section>
+            <header class="major">
+                <h2 id="part-e"> Part e) Plots of Training Error and Test Error Versus 'k' Gaussian Basis Functions</h2>
+            </header>
+            <p>
+                When implementing the gaussian basis function, it was not clear what the value of 'a' should be in the code below: 
+                    $$ \phi_k(x, c_k, a) = \exp\left(a \|x - c_k\|_2\right) $$
+
+                
+
+                The <a href="../assignment2/assignment2part1code.html">python script on the Assignment 2 Part 1 Code page </a> implements the 
+                functions basis_gaussian(), predictions_and_weight(), and RMS calculations for both the predicted y-values for the 
+                batch of training data and for the predicted y-values for the test data. 
+                <br> <br>
+                The basis_gaussian() function takes in the training data set and number of gaussian basis functions to be used (k),
+                and calculates the Phi function matrix that will be 13 rows and 100 columns.
+                Note that the additional row that is found with the polynomial basis function is NOT included in the Gaussian basis function
+                code implementation. The Gaussian basis function does not contain 'bias' terms, it is simply composed of Gaussian functions centered 
+                on a number of center values, defined by 'k'. 
+
+                The Phi function matrix is formed by solving the Phi functions (aka the 'k' number of Gaussian functions) with the data sets (x1, x2, etc.) 
+                plugged into them.
+                <br> <br>
+                The pseudo-inverse of the Phi matrix is taken and is multipled with the training datas' corresponding
+                y values, which represent the corresponding median house values for the row of training data features.
+                <br><br>
+                These functions are applied to generate the weights for sets of Gaussian basis functions ranging from sets of 5 to 95, increasing
+                by increments of 10 functions. The plot below shows how well each set of Gaussian equations is able to predict all of the original training data sets (100 data sets), and 
+                then predict the testing data sets (406 data sets). 
+                <br><br>
+                The values of each data point from the plot below are shown in the table underneath the graph.
+            </p>
+            <div style="text-align: center;">
+                <img src="../assignment2/parte_rms_error_vs_k_gaussian_functions.png" width="90%" height="auto">
+            </div>
+            <br><br>
+
+            <table>
+                <tr>
+                    <th style="text-align: center;">Number of Gaussian Basis Functions, k</th>
+                    <th>RMS Error of Training Data</th>
+                    <th>RMS Error of Testing Data</th>
+                    <th>Condition number of Training Data Design Matrix, Phi</th>
+                </tr>
+                <tr>
+                    <td style="text-align: center;">5</td>
+                    <td>10.93299</td>
+                    <td>18.40918</td>
+                    <td>18.14</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;">15</td>
+                    <td>5.30032</td>
+                    <td>14.61859</td>
+                    <td>1845.17</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;">25</td>
+                    <td>3.31169</td>
+                    <td>13.51493</td>
+                    <td>34605.33</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;">35</td>
+                    <td>2.39226</td>
+                    <td>13.11416</td>
+                    <td>81119.35</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;">45</td>
+                    <td>1.89772</td>
+                    <td>12.93070</td>
+                    <td>277891.80</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;">55</td>
+                    <td>1.63106</td>
+                    <td>13.76322</td>
+                    <td>482658.95</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;">65</td>
+                    <td>1.28822</td>
+                    <td>12.85910</td>
+                    <td>1768501.59</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;">75</td>
+                    <td>1.09536</td>
+                    <td>16.42721</td>
+                    <td>4497137.58</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;">85</td>
+                    <td>0.91179</td>
+                    <td>17.17503</td>
+                    <td>11523738.37</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;">95</td>
+                    <td>0.26282</td>
+                    <td>23.48727</td>
+                    <td>32823067.61</td>
+                </tr>
+                </table>
+            
+                <p>
+                In the graph, the RMS errors of the training data decrease as the number of the gaussian basis 
+                function increases from a set of 5 Gaussian basis functions (where the RMS error was 10.93) to a 
+                set of 95 Gaussian basis functions (where the lowest RMS error achieved is 0.26). Compared to the 
+                4th degree polynomial basis function results from part a) (which had an RMS value of 1.29), it is clear that
+                the 95 Gaussian basis functions fit the training data better. 
+                
+                
+                improved for fitting to the training data. However, the RMS error of the training data increases for the 
+                fifth-order, sixth-order and seventh-order polynomial to values of 1.63, 1.51 and 3.8 respectively.
+                This may be because the higher-order polynomial basis functions are overly influenced by the variations of the
+                features, becoming 'overfitted'. 
+
+                <br><br>
+                It is clear that since the training data sets chosen were chosen arbitrarily, (as the first 100 data sets)
+                the trained polynomial regressions do a poor job at predicting the median house value of the remaining 406 sets 
+                of testing data, because the RMS values increase from 55 functions to 95 functions (with a slight dip when k is 65), 
+                the RMS errors explode in value.
+                <br><br>
+                It is expected that with a higher number of Gaussian basis functions, the RMS values should decrease when predicting the testing data.
+                This discrepeancy can be explained for a few reasons. Firstly, the training data range of data for all of the features is limited, and only covers a subsection of the spread found in various features inside
+                the testing data. That means the model is trained only for a short range in possible median house values.
+                <br><br>
+                Secondly, the condition number of the training design data matrix (phi) is also shown in the table above, and as the number of Gaussian 
+                functions increase, the condition number increases drastically, indicating that the function variables become more linearly dependent
+                and sensitive to small data disturbances. The lines connecting k = 5 to k = 45 follows a smooth curve, while the data points from k = 55 
+                to k = 95 becomes quite jagged. 
+                <br><br>
+                Lastly, the large number of Gaussian basis functions could be overfitting the mere 100 training data points, so the weights become too specific
+                to data points simillar to the training data points, rather than the wide possiblities of test data the model may recieve, and thus the predictions 
+                for median house value from the 13 features of the Boston dataset are quite off.
+                </p>
+        </section>
+        
+        <section>
+            <header class="major">
+                <h2 id="part-f"> Part f) Ridge Regression and Cross Validation of 90 Gaussian Basis Functions</h2>
+            </header>
+            
+            <p>
+                A plot of average validation set error versus the regularizing constant lambda is shown below, along with 
+                a table of all of the average RMS values per selected lambda value. 
+            </p>
+
+            <div>
+                <img src="../assignment2/partf_ridge_regression_semilogx_plot.png" width="100%" height="auto">
+            
+                <br> <br>
+                <table style="width: 75%; text-align:center; margin: 0 auto;">
+                    <tr>
+                        <th style="text-align: center;">Lambda</th>
+                        <th style="text-align: center;">Average Validation RMS Value </th>
+                    </tr>
+                    <tr>
+                        <td>0</td>
+                        <td>18.98867</td>
+                    </tr>
+                    <tr>
+                        <td>0.01</td>
+                        <td>5.02267</td>
+                    </tr>
+                    <tr>
+                        <td>0.1</td>
+                        <td>5.41241</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>5.88186</td>
+                    </tr>
+                    <tr>
+                        <td>10</td>
+                        <td>6.87412</td>
+                    </tr>
+                    <tr>
+                        <td>100</td>
+                        <td>7.95117</td>
+                    </tr>
+                    <tr>
+                        <td>1000</td>
+                        <td>10.56363</td>
+                    </tr>
+                </table>
+            </div>
+            <p>
+                <br><br>
+                As seen in the graph and the table above, the lambda value that minimizes the average cross-validated RMS value the most 
+                (from the 7 possible values of lambda) is when lambda is equal to 0.01. Therefore, I would pick 0.01 as the regularization parameter for the 
+                cross-validation testing of this set of 90 gaussian basis functions.
+                <br><br>
+                Note that each of the 90 training datasets used in the cross-validation are all selected as centers for the 90 Gaussian basis functions.
+                Since it was established in part e) that the higher number of basis functions could result in an ill-conditioned matrix. 
+                Without the hyperparameter, the RMS sits at roughly 18.99, but with a little bit of penalty for widely varying weights (since each feature 
+                has drastically different units and was not normalized in this assignment), by choosing 
+                a lambda value of 0.01, the model reduces the weights closer to zero, while still being able to spot the patterns in the data. 
+                For values of lambda above 0.01, the 'penalty' for widely varying weights becomes too severe, causing in a model that grows more generic, 
+                and thus results in large average RMS values. 
+            </p>
+        </section>
+    </div>
+
+    <!-- Scripts -->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/jquery.poptrox.min.js"></script>
+    <script src="assets/js/browser.min.js"></script>
+    <script src="assets/js/breakpoints.min.js"></script>
+    <script src="assets/js/util.js"></script>
+    <script src="assets/js/main.js"></script>
+</body>
+</html>

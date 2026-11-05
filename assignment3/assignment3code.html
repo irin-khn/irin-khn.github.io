@@ -1,0 +1,49 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Assignment 3 - PVA</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+
+    <link rel="stylesheet" href="../assets/css/assignment.css">
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header id="header">
+        <div class="inner">
+            <h1>Assignment 3: Code</h1>
+            <nav>
+                <a href="../index.html">Home</a>
+                <a href="../assignment3/assignment3report.html">Part 3 Report</a>
+                <a href="../assignment3/assignment3code.html">Part 3 Python Code</a>
+            </nav>
+        </div>
+        </header>
+
+    <div id="main">
+        <section id="overview">
+            <h5>By Irina Khan, November 4, 2026</h5>
+            <header class="major">
+                <h2>PCA Python Code</h2>
+            </header>
+
+            <p>
+                Code is displayed using the fetch function (Javascript) on the python script posted on the git repo: https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch 
+            </p>
+
+            <pre id="python-code-gaussian-basis" > </pre>
+
+            <script>
+            fetch("A3_PCA_code.py")
+                .then(response => response.text())
+                .then(code => {
+                    document.getElementById("python-code-gaussian-basis").textContent = code;
+                });
+            </script>
+        </section>
+    </div>
+</body>
+
+        

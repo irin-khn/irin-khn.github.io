@@ -1,0 +1,366 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Assignment 3 - PCA</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+
+    <link rel="stylesheet" href="../assets/css/assignment.css">
+       
+    <!--The following code block enables Latex programming, which was taken 
+    from the 'Starter Template' at https://katex.org/docs/browser-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.18.7/dist/katex.min.css" integrity="sha384-JctiRyLzXCrSoOOzFlSoWLdyzQl7OrrRnhyeBmzB6ZWtcjccUyc8lCQJqIbs3uQX" crossorigin="anonymous">
+
+    <!-- The loading of KaTeX is deferred to speed up page rendering -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.18.7/dist/katex.min.js" integrity="sha384-+7Keh381hSkXmXqnjC0JBM/kzsN6TFj+wMKychSLjTvJ8/0ElMde2uKl8i6p6Buj" crossorigin="anonymous"></script>
+
+    <!-- To automatically render math in text elements, include the auto-render extension: -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.18.7/dist/contrib/auto-render.min.js" integrity="sha384-bjyGPfbij8/NDKJhSGZNP/khQVgtHUE5exjm4Ydllo42FwIgYsdLO2lXGmRBf5Mz" crossorigin="anonymous"
+        onload="renderMathInElement(document.body);"></script>
+</head>
+<body>
+
+    <!-- Header -->
+    <header id="header">
+        <div class="inner">
+            <h1>Assignment 3: PCA</h1>
+            <nav>
+                <a href="../index.html">Home</a>
+                <a href="../assignment3/assignment3report.html">Assignment 3 Report</a>
+                <a href="../assignment3/assignment3code.html">Assignment 3 Python Code</a>
+            </nav>
+        </div>
+        </header>
+
+    <!-- Main Content -->
+    <div id="main">
+
+        <!-- Overview -->
+        <section id="overview">
+            <h5>By Irina Khan, November 4, 2026</h5>
+            <header class="major">
+                <h2>Overview</h2>
+            </header>
+
+            <p>
+                This assignment is aimed to conduct PCA on a dataset containing 150 data points and 5 features 
+                describing properties of iris flowers. The features are its sepal length (cm), sepal width (cm), 
+                petal length (cm), petal width (cm) and the class of irises (aka Setosa, Versicolor, and Virginica flowers).
+            </p>
+            <h2> Table of Contents</h2>
+            <ul>
+                <li> <a href="#part-1"> Part 1) PCA by Hand</a></li>
+                <li> <a href="#part-2"> Part 2) Data Visualization of Iris Dataset (2 Features)</a></li>
+                <li> <a href="#part-3"> Part 3) PCA of Iris Dataset</a></li>
+                <li> <a href="#part-4"> Part 4) Data Compression of Iris Dataset</a></li>
+                <li> <a href="#part-5"> Part 5) Finding Non-Linear Components of Iris Dataset via ISOMAP</a></li>
+            </ul>
+        </section>
+
+       
+        <section>
+            <header class="major">
+                <h2 id="part-1"> Part 1) PCA by Hand</h2>
+            </header>
+            <table style="width: 40%; margin-left: auto; margin-right: auto;">
+                <tr>
+                    <th style="text-align: center;">$$x_{1}$$</th>
+                    <th style="text-align: center;">$$x_{2}$$</th>
+                </tr>
+                <tr>
+                    <td style="text-align: center;">-2</td>
+                    <td style="text-align: center;">-1</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;">-1</td>
+                    <td style="text-align: center;">0</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;">0</td>
+                    <td style="text-align: center;">1</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;">1</td>
+                    <td style="text-align: center;">2</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;">2</td>
+                    <td style="text-align: center;">3</td>
+                </tr>
+            </table>
+            <p>
+                Given the dataset in the table above, the screenshots below showcase the steps required to carry 
+                out the Principle Component Analysis. 
+                <br> <br>
+                The steps carried out are to first center the data, find the covariance matrix, and to find the 
+                eigenvalues and eigenvector of the dataset. 
+            </p>
+            <div style="text-align: center;">
+                <img src="../assignment3/part1_handwritten1.png" width="70%" height="auto">
+                <img src="../assignment3/part1_handwritten2.png" width="70%" height="auto">
+                <img src="../assignment3/part1_handwritten3.png" width="70%" height="auto">
+                <img src="../assignment3/part1_handwritten4.png" width="70%" height="auto">
+                <img src="../assignment3/part1_handwritten5.png" width="70%" height="auto">
+                <img src="../assignment3/part1_handwritten6.png" width="70%" height="auto">
+                <img src="../assignment3/part1_handwritten7.png" width="70%" height="auto">
+                <img src="../assignment3/part1_handwritten8.png" width="70%" height="auto">
+            </div>
+        </section>
+
+        <section>
+            <header class="major">
+                <h2 id="part-2">Part 2) Data Visualization of Iris Dataset (2 Features)</h2>
+            </header>
+            <p>
+                The assignments asks to pick any of the 4 class features and marginalize them to visualize *either* one feature,
+                two feature, or three features of the full dataset.
+                I chose to visualize the data in a 2D graph displaying 2 different features. Arbitrarily, I chose 
+                the sepal length (which is shown on the x-axis) and sepal width. (which is shown on the y-axis)
+            </p>
+            <div style="text-align: center;">
+                <img src="../assignment3/part2_datavis_2_features.png" width="70%" height="auto">
+            </div>
+            <p>
+                In this specific marginalization and display of the iris dataset, the setosa class (shown in red) can be easily classified 
+                by drawing a boundary at approximatly y = 1.2x - 3.2. This equation is obtained by drawing a boundary line between (6, 4) and (4.5, 2.2),
+                and approximating a y-axis intersection at -3.2. Thus, the setosa class can be easily clasified by linear boundaries.
+                However, the versicolor class (shown in blue) and virginica class (shown in yellow) have some points that overlap
+                each other. The 2 classes are all in the same right side of the graph, making it difficult (in this marginalization) to 
+                classify points to either class. Thus, this marginalization using only two features is not sufficient to distinguish between all three classes,
+                just the setosa class and the versicolor/virginica class.
+            </p>
+        </section>
+
+        <section>
+            <header class="major">
+                <h2 id="part-3">Part 3) PCA of Iris Dataset</h2>
+            </header>
+            <p>
+                Using the scikit-learn python function 'StandardScaler', I was able to normalize the data 
+                of the 4 features of 150 datapoints (so that the mean is 0 and the variance is 1), using the 
+                'fit_transform()' function on the StandardScaler variable called "scaler". Then, I used the scikit-learn 
+                python function 'PCA' to actually apply the Principle Component Analysis on the normalized data, 
+                by using the 'fit()' function of the PCA variabled called "pca". 
+                <br><br>
+                Note, that the number of features of this dataset were set as a constant of FEATURES equal to 5 because 
+                of the fifth column of data that contains the class of each datapoint. However, all mathetmatical operations 
+                conducted on the datapoints occur with 4 features, or [FEATURES - 1] in the 
+                <a href="../assignment3/assignment3code.html">python code.</a>
+                <br><br>
+                After running PCA on the dataset, the following table shows the vectors for the components PC1, PC2, PC3, and PC4,
+                which are based on the location of axes that maximizes the variance in the data.
+            </p>
+            <table style="text-align: center; width: 70%; margin-left: auto; margin-right: auto;">
+                <tr>
+                    <th style="text-align: center;">PCA Axis</th>
+                    <th style="text-align: center;">Sepal Length</th>
+                    <th style="text-align: center;">Sepal Width</th>
+                    <th style="text-align: center;">Petal Length</th>
+                    <th style="text-align: center;">Petal Width</th>
+                </tr>
+                <tr>
+                    <td>PC1</td>
+                    <td>0.5224</td>
+                    <td>-0.2634</td>
+                    <td>0.5813</td>
+                    <td>0.5656</td>
+                </tr>
+                <tr>
+                    <td>PC2</td>
+                    <td>0.3723</td>
+                    <td>0.9256</td>
+                    <td>0.0211</td>
+                    <td>0.0654</td>
+                </tr>
+                <tr>
+                    <td>PC3</td>
+                    <td>0.7210</td>
+                    <td>-0.2420</td>
+                    <td>-0.1409</td>
+                    <td>-0.6338</td>
+                </tr>
+                <tr>
+                    <td>PC4</td>
+                    <td>-0.2620</td>
+                    <td>0.1241</td>
+                    <td>0.8012</td>
+                    <td>-0.5235</td>
+                </tr>
+            </table>
+            <p>>
+                For the visualization on the major axis, the 1-D plot below shows the 150 datapoints plotted along the PC1 vector. Please note that for 
+                ease of readability, the 3 different classes are seperated vertically, and the points are made translucent,
+                so you may see the density of the data points per iris class. The PC1 axis is on the x-axis, while the y-axis of 
+                the plot has the three different classes shown. Both axes are dimensionless. 
+            </p>
+            <div style="text-align: center;">
+                <img src="../assignment3/part3_major_axis_plot.png" width="70%" height="auto">
+            </div>
+            <p>
+                For the visualization of the datapoints against 2 axes, the figure below is a 2D scatter plot that shows the 150 data points against the PC1 and PC2 vectors.
+                The PC1 axis is the x-axis, while the PC2 axis is the y-axis. Compared to the sepal width vs. sepal length graph visualization 
+                shown in part 2, the classification of the setosa class of irises (shown in the red dot) is much easier, as the linear boundary appears to 
+                be somewhere between x = -1.5 to x = -0.5. 
+            </p>
+            <div style="text-align: center;">
+                <img src="../assignment3/part3_two_axes_plot.png" width="70%" height="auto">
+            </div>
+            <p>
+                For the visualization of the datapoints against 3 axes, the figure below is a 3D scatter plot that shows the 150 data points against the PC1, 
+                PC2 and PC3 vectors. 
+            </p>
+            <div style="text-align: center;">
+                <img src="../assignment3/part3_three_axes_plot.png" width="70%" height="auto">
+            </div>
+            <p>
+                To help with the clarity of the clusters of data points, the subplots below show the top, side and front views of this 3D 
+                visualization, to help see if natural class boundaries form, particularly to help distinguish between the versicolor and virginica classes.
+                since they have been the most overlapping datapoints in the previous marginalization in Part 2).
+                <br><br>
+                The top view of the three axes PC plot:
+            </p>
+            <div style="text-align: center;">
+                <img src="../assignment3/part3_three_axes_plot_top_view_(PC3).png" width="70%" height="auto">
+            </div>
+            <p>The side view of the three axes PC plot: </p>
+            <div style="text-align: center;">
+                <img src="../assignment3/part3_three_axes_plot_side_view_(PC1).png" width="70%" height="auto">
+            </div>
+            <p>The front view of the three axes PC plot:</p>
+            <div style="text-align: center;">
+                <img src="../assignment3/part3_three_axes_plot_front_view_(PC2).png" width="70%" height="auto">
+            </div>
+
+        </section>
+        
+        <section>
+            <header class="major">
+                <h2 id="part-4">Part 4) Data Compression of Iris Dataset</h2>
+            </header>
+            <p>
+                Before calculating how much of the dataset's variance the PCA axes (PC1, PC2, PC3 and PC4) account for, I wanted 
+                to first check and see that the sum of all of the components accounts for the full variance in the dataset.
+                <br><br>
+                The full variance of the dataset can be found using the Frobenius norm, which is calculated from the 150x4 matrix
+                that is centered. The centering of this data is again found by substracting the mean of each column or feature 
+                from each of the datapoints in their respective columns. 
+                <br><br>
+                The formula for the Frobenius norm for the 2D matrix is as follows:
+
+                $$\|X_{\text{centered}}\|_F^2 = \sum_{r=1}^{150}\sum_{c=1}^{4} (X_{\text{centered}})_{rc}^2$$ 
+
+                To obtain the total variance from the Frobenius norm, it must be divided by the number of sample datapoints, aka (N-1), as follows:
+
+                $$\text{Total variance} = \frac{\|X_{\text{centered}}\|_F^2}{150-1}$$ 
+
+                After being implemented into code and calculated, the resulting total variance from the Frobenius norm calculation 
+                is 4.026845637583893. When adding up the variance of each of the components PC1, PC2, PC3, and PC4, the total 
+                variance is 4.026845637583895. The values are extremely close, with only a difference of -1.776e-15, which is a 
+                negligable difference that may be explained by computer rounding errors. This proves that the total variance from PCA 
+                equals the total variance of the Frobenius norm, which accounts for the total variance of the dataset.
+                <br><br>
+                The variance of each axis from PCA is found using the 'explained_variance_ratio_' attribute of the 'PCA' class. Each of 
+                the principle components in the table below account for the following percentage of variance of the dataset:
+            </p>
+            <table style="text-align: center; width: 70%; margin-left: auto; margin-right: auto;">
+                <tr>
+                    <th style="text-align: center;">PCA Axis</th>
+                    <th style="text-align: center;">Variance (%)</th>
+                </tr>
+                <tr>
+                    <td>PC1</td>
+                    <td>72.7705</td>
+                </tr>
+                <tr>
+                    <td>PC2</td>
+                    <td>23.0305</td>
+                </tr>
+                <tr>
+                    <td>PC3</td>
+                    <td>3.6838</td>
+                </tr>
+                <tr>
+                    <td>PC4</td>
+                    <td>0.5152</td>
+                </tr>
+            </table>
+            <p>
+                The variance percentages across all four components all add up to 100%. 
+                <br><br>
+                From the previous part's 2D representation of the dataset (from plotting datapoints against PC1 and PC2), the variance 
+                accounted for from PC1 and PC2 is 95.8010%. 
+                <br><br>
+                To account for just 50% of the dataset's variance, only PC1 is needed, as it accounts for 72.7705% on its own.
+                <br><br>
+                From the conclusions above, it is clear that the PCA does an effective job at data compression, where flattening the data into 
+                two dimensions can be done while preserving approximately 96% of the variance in the data.              
+                
+            </p>
+        </section>
+        <section>
+            <header class="major">
+                <h2 id="part-5">Part 5) Finding Non-Linear Components of Iris Dataset via ISOMAP</h2>
+            </header>
+            <p>
+                The plot with the datapoints graphed against the ISOMAP dimensional axes after reducing the dimensions of the dataset 
+                from 4 to 3 is shown below, along with the top, side and front views of the 3D plot to help clarify the positions of the 
+                datapoints in the 3D space.
+            </p>
+            <div style="text-align: center;">
+                <img src="../assignment3/part5_isomap_3D_plot.png" width="70%" height="auto">
+            </div>
+            <p>The top view of the ISOMAP plot: </p>
+            <div style="text-align: center;">
+                <img src="../assignment3/part5_isomap_3D_plot_top_view_ISOMAP_D3.png" width="70%" height="auto">
+            </div>
+            <p>The side view of the ISOMAP plot: </p>
+            <div style="text-align: center;">
+                <img src="../assignment3/part5_isomap_3D_plot_side_view_ISOMAP_D1.png" width="70%" height="auto">
+            </div>
+            <p>The front view of the ISOMAP plot: </p>
+            <div style="text-align: center;">
+                <img src="../assignment3/part5_isomap_3D_plot_front_view_ISOMAP_D2.png" width="70%" height="auto">
+            </div>
+            <p> 
+                Between the plots generated by the use of three principle components vs the three ISOMAP dimensions, the 
+                setosa class is more easy to distinguish in the ISOMAP plot, as the cluster of datapoints appear to take 
+                the shape of a plane. The ISOMAP method is good at preserving *non-linear* structures across the iris classes,
+                and it appears that the virginica data points (shown in yellow) form a curved plane when viewed from the top view of the 3D plot.
+                However, the versicolor classes still are hard to distinguish from the virginica data points, as they overlap. Between the 
+                ISOMAP display and the PCA plot, the overlap between the versicolor and virginica classes appear to be slightly worse (or more mixed up) 
+                in the ISOMAP display vs the front view of the PCA plots.
+                <br><br>
+                The data compression criteria is clear for the PCA method, where with all three axes, the retained variance that the 
+                three principle components account for is 99.4848%, while the criteria for the ISOMAP method is not clear, and so it is harder to 
+                determine how much of the original variance the ISOMAP dimensions has preserved. 
+                <br><br>
+                Thus, since the data compression criteria is clear for the PCA method, and the quality of classfication of datapoints is 
+                not made drastically clearer through the ISOMAP method, I would prefer using the PCA method for this particular application.
+            </p>
+    </div>
+
+
+    <!-- Footer -->
+    <!-- <footer id="footer">
+        <div class="inner">
+            <ul class="actions">
+                <li>
+                    <a href="index.html" class="button">Back to Home</a>
+                </li>
+            </ul>
+
+            <p>Mechatronics Engineering · University of Waterloo</p>
+        </div>
+    </footer> -->
+
+
+    <!-- Scripts -->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/jquery.poptrox.min.js"></script>
+    <script src="assets/js/browser.min.js"></script>
+    <script src="assets/js/breakpoints.min.js"></script>
+    <script src="assets/js/util.js"></script>
+    <script src="assets/js/main.js"></script>
+
+</body>
+</html>

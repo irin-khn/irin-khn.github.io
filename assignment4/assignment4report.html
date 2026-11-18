@@ -1,0 +1,266 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Assignment 4 - Text Classification with Naive Bayes</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+
+    <link rel="stylesheet" href="../assets/css/assignment.css">
+       
+    <!--The following code block enables Latex programming, which was taken 
+    from the 'Starter Template' at https://katex.org/docs/browser-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.18.7/dist/katex.min.css" integrity="sha384-JctiRyLzXCrSoOOzFlSoWLdyzQl7OrrRnhyeBmzB6ZWtcjccUyc8lCQJqIbs3uQX" crossorigin="anonymous">
+
+    <!-- The loading of KaTeX is deferred to speed up page rendering -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.18.7/dist/katex.min.js" integrity="sha384-+7Keh381hSkXmXqnjC0JBM/kzsN6TFj+wMKychSLjTvJ8/0ElMde2uKl8i6p6Buj" crossorigin="anonymous"></script>
+
+    <!-- To automatically render math in text elements, include the auto-render extension: -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.18.7/dist/contrib/auto-render.min.js" integrity="sha384-bjyGPfbij8/NDKJhSGZNP/khQVgtHUE5exjm4Ydllo42FwIgYsdLO2lXGmRBf5Mz" crossorigin="anonymous"
+        onload="renderMathInElement(document.body);"></script>
+</head>
+<body>
+
+    <!-- Header -->
+    <header id="header">
+        <div class="inner">
+            <h1>Assignment 4: Text Classification with Naive Bayes</h1>
+            <nav>
+                <a href="../index.html">Home</a>
+                <a href="../assignment4/assignment4report.html">Assignment 4 Report</a>
+                <a href="../assignment4/assignment4code.html">Assignment 4 Python Code</a>
+            </nav>
+        </div>
+        </header>
+
+    <!-- Main Content -->
+    <div id="main">
+
+        <!-- Overview -->
+        <section id="overview">
+            <h5>By Irina Khan, November 17, 2026</h5>
+            <header class="major">
+                <h2>Overview</h2>
+            </header>
+
+            <p>
+                This assignment is aimed to apply the Naive Bayes classificaiton method to help sort customer reviews into 'positive' reviews 
+                or 'negative' reviews. In the dataset 'all_sentiment_shuffled.txt', there are 11914 customer reviews in total.
+                <br><br>
+                The initial part of this assignment is to read and process the data from the .txt file, which was done according to the 
+                provided code snippiets in Assignment 4. 80% of the dataset was taken to be used to train our classification, and the remaining 
+                20% will act as the 'evaluative' dataset. This way, since we have access to their *real* sentiment class (positive or negative), we 
+                can something to compare the results of our classification model, which helps us gauge its accuracy.
+                <br><br>
+                The following parts outline the 5 main functions that had to be implemented.
+            </p>
+            <h2> Table of Contents</h2>
+            <ul>
+                <li> <a href="#part-1"> Part 1) Defining train_nb() </a></li>
+                <li> <a href="#part-2"> Part 2) Defining score_doc_label() </a></li>
+                <li> <a href="#part-3"> Part 3) Defining classify_nb() </a></li>
+                <li> <a href="#part-4"> Part 4) Defining classify_documents() </a></li>
+                <li> <a href="#part-5"> Part 5) Defining accuracy() </a></li>
+            </ul>
+        </section>
+
+       
+        <section>
+            <header class="major">
+                <h2 id="part-1"> Part 1) Defining train_nb()</h2>
+            </header>
+            
+            <p>
+                The purpose of the 'train_nb()' function is to approximate the probabilities of each word of the *training* data set
+                being in either the 'positive' or 'negative' classes. The probabilities were returned as logarithmic probabilities, 
+                since this lets us leverage the very useful logarithmic property of multipling probabilities by adding their log values instead.
+                This makes for less-demanding computational power, and allows us to multiply very small probability values that would have 
+                otherwise appeared as 'zero' values to the python code. 
+                <br> <br>
+                Note that due to time constraints, the sentiment classes (positive reviews or "pos", and negative reviews or "neg") were 
+                hardcoded into the python script. (I didn't have time to attempt the optional tasks, unfortunately.)
+                <br><br>
+                'train_nb()' takes 'documents' and 'labels' as input parameters, and returns 'class_counts', 'word_counts', 'total_word_counts', 
+                'vocabulary_size'.
+            </p>
+        </section>
+
+        <section>
+            <header class="major">
+                <h2 id="part-2">Part 2) Defining score_doc_label()</h2>
+            </header>
+            <p>
+                The purpose of the 'score_doc_label()' function is to obtain the *logarithmic* probability of words found in a given 'document' being classified 
+                as the requested 'label'. (either 'pos' for positively, or 'neg' for negatively)
+                <br><br>
+                Here, the Multinomial Naive Bayes formula is applied as shown below: 
+
+                $$ \hat{P}(w_i | b_j) = \frac{count(w_i,c_j)}{\sum\limits_{w \in V}  (w, c_j)}$$ 
+
+                Here, the *posterior* probability, (which is our goal) is found from *prior* term and the *likelihood* term. 
+                The prior term represents the probability of a document belonging to a particular class, 
+                while the likelihood term represents the probability of seeing a particular word given that class.
+                <br><br>
+                However, if we try to find the probability of a word which has not appeared in the entire vocabulary (defined by the training 
+                dataset (which is known as V in the formula above), then it errors. So, we apply a *smoothing* filter, as requested by the Assignment 4 instructions.
+                The smoothing filter applied is the 'Laplace smoothing' filter, also known as the 'add 1' smoothing. The modified equation with the 
+                smoothing effect is shown below:
+
+                $$ \hat{P}(w_i | b_j) = \frac{count(w_i,c_j) + 1}{(\sum\limits_{w \in V} count(w, c_j)) + |V|}$$ 
+
+                <br><br>
+
+                Some other key points to note:
+                <br>
+                When trying to classify a new 'document', if a word appears multiple times, it just adds the probability of that word's probability 
+                of being classified as a 'positive' or 'negative' sentiment multiple times, which helps reinforce whether that repeated word is
+                 classified more as a positive sentiment or a negative sentiment.
+                <br><br>
+                As an intuitive example, there is SOME probability, that a word like 'incredible' can be classified as negative, but, by intuition, 
+                we would expect that probability to be lower than the word being classified as positive, since in most contexts, it is a happy word.
+                <br><br>
+                <h3>Sanity Check 1</h3>
+                The probability of the 'score_doc_label()' function classifying the one-word document "great" and "bad" as either positive or negative 
+                sentiments is shown in the table below.
+            </p>
+            <table style="width: 80%; margin-left: auto; margin-right: auto;">
+                <tr>
+                    <th style="text-align: center;">One-word Document</th>
+                    <th style="text-align: center;">Probability of Being Positive</th>
+                    <th style="text-align: center;">Probability of Being Negative</th>
+                </tr>
+                <tr>
+                    <td style="text-align: center;">'great'</td>
+                    <td style="text-align: center;">0.1321%</td>
+                    <td style="text-align: center;">0.0528%</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;">'bad'</td>
+                    <td style="text-align: center;">0.0172%</td>                    
+                    <td style="text-align: center;">0.0454%</td>
+                </tr>
+            </table>
+            <p>
+                The word 'great' has a higher likelihood of being a positive review rather than a negative review, while the word 'bad'
+                has a higher likelihood of being a negative review rather than a positive review.
+
+                <h3>Sanity Check 2</h3>
+                When classifying the probability of the document "['a','top-quality', 'performance']" as either a positive or negative review,
+                the function appears to work without crashing the python code. It has a 3.542228051435192e-10 percent probability of being 
+                classified as a positive review, and a 1.810287759647865e-10 percent probability of being classified as a negative review. 
+                This intuitively makes sense, as a review of 'a top-quality performance' would appear to be more positive than negative to 
+                an ordinary human pair of eyes.
+            </p>
+        </section>
+
+        <section>
+            <header class="major">
+                <h2 id="part-3">Part 3) Defining classify_nb()</h2>
+            </header>
+            <p>
+                The function 'classify_nb()' takes the outputs of the 'train_nb()' function and is hardcoded to call the 'score_doc_label()' function
+                for the positive and negative classes. It gets the resulting logarithmic probabilities and compares then against each other. 
+                If the probability of the document being positive is higher than being negative, the function will return a classification guess of "pos". 
+                If the probability of the document being positive is equal to or lower than being negative, then the function returns a guess of "neg".
+                <br><br>
+                The function appears to be functioning correctly. For a test document "['happy', 'and', 'soulful', 'it', 'is', 'a', 'masterpiece']", it was classified 
+                as a positive review, while the test document "['kinda', 'boring', 'was', 'a', 'waste', 'of', 'money']" was classified as a negative review.
+            </p>
+        </section>
+        
+        <section>
+            <header class="major">
+                <h2 id="part-4">Part 4) Defining classify_documents()</h2>
+            </header>
+            <p>
+                The function 'classify_documents()' simply scales up the usage of the 'classify_nb()' function to apply to a list of document inputs.
+                Through a *for* loop that iterates through each document in the list, it returns a list of the guessed classifications for each document.
+            </p>
+        </section>
+        <section>
+            <header class="major">
+                <h2 id="part-5">Part 5) Defining accuracy()</h2>
+            </header>
+            <p>
+                The 'accuracy()' function takes the list of guessed labels from the 'classify_documents()' and compares them to the original 
+                'eval_labels' from the given dataset. 
+                <br><br>
+                The accuracy of this Naive Bayes classification on the 'all_sentiment_shuffled.txt' dataset is 81.54%. 
+
+                <h3>Error Analysis</h3>
+                Out of the 2383 test documents, 440 were misclassified. In the <a href="../assignment4/assignment4code.html">python code</a>, 
+                a search loop was implemented to search for examples where it was very heavily misclassified. A heavy misclassification can be defined as 
+                having a significant difference between the probability of the document being positive and being negative. 
+                <br><br>
+                The code compares the logarithm of probabilities. The first check is to see if there is a logarithmic difference of 5 for reviews that are under 50 words.
+                There are no reviews that have a larger difference that is concise, but I also did find an example of a very long review that had a logarithmic probability 
+                difference of 90. 
+                <br><br>
+
+                The first misclassified review is written below:
+                <br><br>
+                "over the last two years , i have found h&r block 's tax cut software to be simple to use to process an otherwise complex tax return . 
+                i would recommend it to anyone who wants a reliable tax preparation source without having to pay the accountant 's fees"
+
+                <br><br>
+                This document is a positive review, but was classified as a negative review with the estimated log probability of positivity being -349.20
+                and the estimated probability of negativity being -341.81.
+                <br><br>
+
+                The sentence above has a mix of positive-sounding words, such as "recommend, reliable", but has more negative-sounding words,
+                such as "cut", "complex", "without", "pay", and "fees". The negativity is addressed to the context of tax return processes, but the Naive Bayes 
+                Classifications attributes those words to the sentiment of the entire review, making it think that the reviewer is dissatisfied.
+                <br><br>
+
+                The second misclassified review is written below:
+                <br><br>
+                "i bought zonealarm internet security suite for the included zonealarm pro firewall ( it cost much less that way ) . if i did n't already 
+                have norton antivirus , i 'd use the antivirus , too"
+                <br><br>
+                
+                This document is a positive review, but was classified as a negative review with the estimated log probability of positivity being -255.97
+                and the estimated log probability of negativity being -247.88.
+                <br><br>
+                Like the first misclassification, it has a mix of positive-sounding and negative-sounding words, resulting in mixed sentiment. The wording 
+                also has a double negative, stating that it would have used the product if they did not have something already, but the classifier sees those words 
+                and amplifies the probability that the review is classified as negative.
+
+                <br><br>
+                The logarithmic probability differences have been very small across the previous misclassfications, but there is one document that has a difference greater than 90. 
+                However, it is a 1210 word long document, incorrectly classified as a positive review when the estimated log probability of positivity is -9131.74
+                and the estimated log probability of negativity being -9222.75. 
+                <br><br>
+                The review has a lot of contextual description of the relevant historical and political understandings in the book that is being reviewed, and the 
+                Naive Bayes filter cannot distinguish between words describing the opinion of the reviewer against the words the author uses to describe certain non-fiction events 
+                positively. As such, this document was most likely misclassified due to the relatively large number of positive words.
+                <br><br>
+
+                These examples outline the shortcomings of the Naive Bayes classification, as it treats words as individual features rather than 
+                classifying the context the words form in particular orders.
+            </p>
+    </div>
+
+
+    <!-- Footer -->
+    <!-- <footer id="footer">
+        <div class="inner">
+            <ul class="actions">
+                <li>
+                    <a href="index.html" class="button">Back to Home</a>
+                </li>
+            </ul>
+
+            <p>Mechatronics Engineering · University of Waterloo</p>
+        </div>
+    </footer> -->
+
+
+    <!-- Scripts -->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/jquery.poptrox.min.js"></script>
+    <script src="assets/js/browser.min.js"></script>
+    <script src="assets/js/breakpoints.min.js"></script>
+    <script src="assets/js/util.js"></script>
+    <script src="assets/js/main.js"></script>
+
+</body>
+</html>
